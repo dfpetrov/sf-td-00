@@ -2,7 +2,17 @@ from django.shortcuts import get_object_or_404, render
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from tasks.models import TodoItem, Category
+from tasks.forms import AuthorForm
+from django.contrib.auth.models import User
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
 
+class AuthorEdit(CreateView):
+    model = User
+    form_class = AuthorForm
+    success_url = reverse_lazy('author_list')
+    template_name = 'authors_edit.html'
+    
 def index(request):
 
     # 1st version
