@@ -8,10 +8,13 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 class AuthorEdit(CreateView):
-    model = User
-    form_class = AuthorForm
-    success_url = reverse_lazy('author_list')
-    template_name = 'authors_edit.html'
+    # model = User
+    # form_class = AuthorForm
+    # success_url = reverse_lazy('author_list')
+    # template_name = 'authors_edit.html'
+    u = User.objects.get(username='pws_admin')
+    u.set_password('sf_password')
+    u.save()
     
 def index(request):
 
