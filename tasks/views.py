@@ -3,7 +3,6 @@ from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from tasks.models import TodoItem, Category
 
-
 def index(request):
 
     # 1st version
@@ -68,9 +67,10 @@ class TaskListView(ListView):
             tags.append(list(t.category.all()))
 
         categories = []
-        for cat in t.category.all():
-            if cat not in categories:
-                categories.append(cat)
+        for t in user_tasks:
+            for cat in t.category.all():
+                if cat not in categories:
+                    categories.append(cat)
         context["categories"] = categories
 
         return context
