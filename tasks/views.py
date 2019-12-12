@@ -2,20 +2,9 @@ from django.shortcuts import get_object_or_404, render
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from tasks.models import TodoItem, Category
-from tasks.forms import AuthorForm
-from django.contrib.auth.models import User
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from datetime import datetime
+from django.views.decorators.cache import cache_page
 
-class AuthorEdit(CreateView):
-    # model = User
-    # form_class = AuthorForm
-    # success_url = reverse_lazy('author_list')
-    # template_name = 'authors_edit.html'
-    u = User.objects.get(username='pws_admin')
-    u.set_password('sf_password')
-    u.save()
-    
 def index(request):
 
     # 1st version
@@ -32,11 +21,19 @@ def index(request):
         'todoitem')).order_by("-total_tasks")
     counts = {c.name: c.total_tasks for c in counts}
 
-    return render(request, "tasks/index.html", {"counts": counts})
+    prs = {}
+    for pr in TodoItem.PRIORITY_CHOICES:
+        prs[pr[1]] = TodoItem.objects.filter(priority=pr[0]).count()
+
+    return render(request, "tasks/index.html", {"counts": counts, "prs": prs})
 
 
 def filter_tasks(tags_by_task):
     return set(sum(tags_by_task, []))
+
+@cache_page(300)
+def date_time(request):
+    return render(request, 'datetime.html', {'dt': str(datetime.now())})
 
 
 def tasks_by_cat(request, cat_slug=None):

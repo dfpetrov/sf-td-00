@@ -38,6 +38,7 @@ class TodoItem(models.Model):
         "Приоритет", choices=PRIORITY_CHOICES, default=PRIORITY_MEDIUM
     )
     category = models.ManyToManyField(Category, blank=True)
+    todos_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.description.lower()
